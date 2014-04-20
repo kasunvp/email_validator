@@ -1,4 +1,4 @@
-Mailgun Bulk Validator (and parser)
+Email Bulk Validator (and parser) using mailgun/mailgun-php
 ===================================
 
 # Initial setup 
