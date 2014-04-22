@@ -1,19 +1,21 @@
 <?php
-# Settings
-$mailgunPubkey = 'pubkey-5ogiflzbnjrljiky49qxsiozqef5jxp7';
-$csvFileName = 'input/' . "contacts.csv"; // csv file with comma separated emails
-$chunkSize = 50 * 1000; // set the number of emails to be included in one file
+# Import Settings
+require_once('settings.php');
+$mailgunPubkey = $settings['mailgunPubkey'];
+$csvFileName = 'input/' . $settings['csvFileName'];
+$chunkSize = $settings['chunkSize'];
 
 # Set error handlers
 set_error_handler("warning_handler", E_WARNING);
 
 function warning_handler($errno, $errstr)
 {
-    switch ($errno) {
-        case 2:
-            echo "Error opening file. Are you sure the file exists?\n";
-            break;
-    }
+//    switch ($errno) {
+//        case 2:
+//            echo "Error opening file. Are you sure the file exists?\n";
+//            break;
+//    }
+    echo "$errno : $errstr";
 }
 
 # Include the Autoloader (see "Libraries" for install instructions in mailgun)
@@ -52,7 +54,7 @@ if (($handle = fopen($csvFileName, "r")) !== FALSE) {
             $chunks = array_chunk($validatedList, $chunkSize);
             echo "\nCreating files with " . $chunkSize . " email"
                 . ($chunkSize > 1 ? 's' : '') . " (max)...\n";
-            mkdir('output', 0775); // create directory output
+            if(!is_dir('output')) mkdir('output', 0775); // create directory output
             foreach ($chunks as $chunk) {
                 $fileNo++;
                 $fileName = 'file' . $fileNo . '_' . time() . '.csv';
